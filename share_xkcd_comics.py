@@ -19,7 +19,7 @@ def get_comics_metadata(comics_num=353):
     return response.json()
 
 
-def get_comics(url, comics_name):
+def get_comics_image(url, comics_name):
     response = requests.get(url)
     response.raise_for_status
     with open(comics_name, 'wb') as new_comics:
@@ -104,7 +104,7 @@ if __name__ == '__main__':
         comics_url = comics_metadata['img']
         author_comment = comics_metadata['alt']
         _, comics_name = os.path.split(unquote(urlsplit(comics_url).path))
-        get_comics(comics_url, comics_name)
+        get_comics_image(comics_url, comics_name)
 
         upload_url = get_upload_url(vk_token)
         upload_info = get_upload_info(upload_url, comics_name, vk_token)

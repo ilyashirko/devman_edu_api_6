@@ -11,7 +11,7 @@ $ source env/bin/activate
 $ pip3 install -r requirements.txt
 ```
 
-create VK group and save it id to .env file as `GROUP_ID`
+create VK group and save it id to .env file as `GROUP_ID`   
 create standalone [vk app](https://dev.vk.com) and get authorize token [here](https://vk.com/dev/implicit_flow_user), save it to .env  
 
 Your .env will be look like:
