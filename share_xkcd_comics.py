@@ -13,11 +13,10 @@ API_VERSION = 5.131
 
 
 class VkApiError(Exception):
-    def __init__(self, response):
-        error_info = response.json()
+    def __init__(self, error_info):
         self.code = error_info['error']['error_code']
         self.message = error_info['error']['error_msg']
-    
+
     def __str__(self):
         return f'ERROR [{self.code}]:\n{self.message}'
 
@@ -46,9 +45,12 @@ def get_upload_url(vk_token):
         params=params
     )
     response.raise_for_status()
-    if 'error' in response.json():
-        raise VkApiError(response)
-    return response.json()['response']['upload_url']
+    response_detailes = response.json()
+
+    if 'error' in response_detailes:
+        raise VkApiError(response_detailes)
+
+    return response_detailes['response']['upload_url']
 
 
 def get_upload_info(upload_url, photo, vk_token):
@@ -60,9 +62,12 @@ def get_upload_info(upload_url, photo, vk_token):
         files = {'photo': file}
         response = requests.post(upload_url, params=params, files=files)
         response.raise_for_status()
-        if 'error' in response.json():
-            raise VkApiError(response)
-        return response.json()
+        response_detailes = response.json()
+
+        if 'error' in response_detailes:
+            raise VkApiError(response_detailes)
+
+        return response_detailes
 
 
 def save_wall_photo(upload_info, vk_token):
@@ -73,14 +78,17 @@ def save_wall_photo(upload_info, vk_token):
         'access_token': vk_token,
         'v': API_VERSION
     }
-    photo_detailes = requests.post(
+    response = requests.post(
         f'{BASE_VK_URL}photos.saveWallPhoto',
         params=params
     )
-    photo_detailes.raise_for_status()
-    if 'error' in photo_detailes.json():
-        raise VkApiError(photo_detailes)
-    return photo_detailes.json()
+    response.raise_for_status()
+    response_detailes = response.json()
+
+    if 'error' in response_detailes:
+        raise VkApiError(response_detailes)
+
+    return response_detailes
 
 
 def post_photo_wall(photo_detailes, group_id, vk_token, text):
@@ -99,8 +107,10 @@ def post_photo_wall(photo_detailes, group_id, vk_token, text):
         params=params
     )
     response.raise_for_status()
-    if 'error' in response.json():
-        raise VkApiError(response)
+    response_detailes = response.json()
+
+    if 'error' in response_detailes:
+        raise VkApiError(response_detailes)
 
 
 def how_much_comics():
